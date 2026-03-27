@@ -1,0 +1,8 @@
+datasets
+tests
+artifacts
+output
+__pycache__/
+.pytest_cache/
+.venv/
+.ipynb_checkpoints/

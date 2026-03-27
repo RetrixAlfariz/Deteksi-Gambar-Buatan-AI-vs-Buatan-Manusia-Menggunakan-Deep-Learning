@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cek AI atau Foto Asli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">AI atau Foto Asli</p>
+                <h1>Human or AI Detection</h1>
+            </div>
+        </section>
+
+        <section class="workspace-grid" id="workspace">
+            <article class="panel upload-panel">
+                <div class="panel-head">
+                    <div>
+                        <p class="eyebrow">Langkah 1</p>
+                        <h2>Pilih gambar yang ingin dianalisis</h2>
+                    </div>
+                </div>
+
+                <label class="dropzone" id="dropzone">
+                    <input id="imageInput" type="file" accept="image/*">
+                    <img id="previewImage" alt="Preview image">
+                    <div class="placeholder" id="placeholder">
+                        <div class="placeholder-icon">+</div>
+                        <strong>Tarik gambar ke sini</strong>
+                        <span>Atau klik tombol upload di bawah. Format JPG, PNG, dan WEBP didukung.</span>
+                    </div>
+                </label>
+
+                <div class="meta-card">
+                    <p class="meta-label">File terpilih</p>
+                    <p class="meta-value" id="fileMeta">Belum ada file dipilih.</p>
+                </div>
+
+                <div class="button-row">
+                    <button class="button button-primary" id="triggerUpload" type="button">Upload Gambar</button>
+                    <button class="button button-secondary" id="analyzeButton" type="button">Analisis Gambar</button>
+                    <button class="button button-ghost" id="clearButton" type="button">Hapus</button>
+                </div>
+            </article>
+
+            <article class="panel result-panel">
+                <div class="panel-head">
+                    <div>
+                        <p class="eyebrow">Langkah 2</p>
+                        <h2>Hasil analisis akan muncul di sini</h2>
+                    </div>
+                    <span class="status-pill status-pill-muted">
+                        {{ "Model Aktif" if model_ready else "Belum Aktif" }}
+                    </span>
+                </div>
+
+                <div class="result-highlight">
+                    <p class="summary-label">Status saat ini</p>
+                    <p id="analysisMessage">
+                        Pilih gambar dulu. Setelah itu, model akan menilai apakah gambar ini buatan AI atau foto asli.
+                    </p>
+                </div>
+
+                <div class="result-grid">
+                    <div class="result-card">
+                        <p class="summary-label">Kategori</p>
+                        <p class="result-value" id="predictedClass">Belum dicek</p>
+                    </div>
+                    <div class="result-card">
+                        <p class="summary-label">Keyakinan</p>
+                        <p class="result-value" id="confidenceValue">--</p>
+                    </div>
+                    <div class="result-card">
+                        <p class="summary-label">Probabilitas AI</p>
+                        <p class="result-value" id="aiProbability">--</p>
+                    </div>
+                    <div class="result-card">
+                        <p class="summary-label">Waktu Proses</p>
+                        <p class="result-value" id="inferenceTime">--</p>
+                    </div>
+                </div>
+
+                <div class="tips-card">
+                    <p class="summary-label">Agar hasil mudah dibaca</p>
+                    <ul class="bullet-list">
+                        <li>Pakai gambar yang jelas dan tidak blur.</li>
+                        <li>Pastikan objek utama terlihat penuh di frame.</li>
+                        <li>Gunakan sample gallery kalau ingin langsung mencoba.</li>
+                    </ul>
+                </div>
+            </article>
+        </section>
+
+        <section class="panel sample-panel" id="samples">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">Foto Contoh</p>
+                    <h2>Coba tanpa upload dulu</h2>
+                </div>
+            </div>
+
+            <p class="section-copy">
+                Pilih salah satu gambar di bawah kalau Anda ingin langsung mencoba tampilan preview.
+            </p>
+
+            <div class="sample-grid">
+                {% for sample in gallery_samples %}
+                    <article class="sample-card">
+                        <img src="{{ sample.asset_url }}" alt="{{ sample.relative_path }}">
+                        <div class="sample-body">
+                            <button
+                                class="button button-secondary sample-button"
+                                type="button"
+                                data-image-url="{{ sample.asset_url }}"
+                                data-image-label="{{ sample.relative_path }}"
+                                data-relative-path="{{ sample.relative_path }}"
+                            >
+                                Gunakan Foto Ini
+                            </button>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>
